@@ -16,7 +16,7 @@ def calendar():
     # Get the user_id from query parameters
     user_id = request.args.get("user_id")
     if not user_id:
-        return "Error: user_id is required to fetch bookings.", 400
+        return {"error": "user_id is required to fetch bookings."}, 400
 
     response = requests.get(
         f"{BUBBLE_API_URL}?constraints=[{{\"key\":\"User ID\",\"constraint_type\":\"equals\",\"value\":\"{user_id}\"}}]",
@@ -24,7 +24,7 @@ def calendar():
     )
 
     if response.status_code != 200:
-        return f"Error: Received status code {response.status_code} from the API."
+        return {"error": f"Received status code {response.status_code} from the API."}, response.status_code
 
     try:
         bookings = response.json()["response"]["results"]
@@ -41,13 +41,10 @@ def calendar():
                     booked_slots[day] = []
                 booked_slots[day].append(time)
     except Exception as e:
-        return f"Error parsing JSON: {str(e)}"
+        return {"error": f"Error parsing JSON: {str(e)}"}, 500
 
-    # Debug: Print booked slots in the console
-    print("Booked Slots for User:", user_id, booked_slots)
-
-    return render_template("calendar.html", booked_slots=booked_slots, user_id=user_id)
-
+    # Return JSON response
+    return {"user_id": user_id, "booked_slots": booked_slots}, 200
 
 @app.route("/book", methods=["POST"])
 def book():
