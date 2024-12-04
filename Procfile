@@ -1,1 +1,1 @@
-web: gunicorn app:app
+web: python -m waitress --host=0.0.0.0 --port=$PORT MeetlyAi.Bubbleio:app
