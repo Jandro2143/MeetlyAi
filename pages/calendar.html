@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Calendar</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/calendar.css') }}">
+</head>
+<body>
+    <h1>Booking Calendar</h1>
+    <div class="calendar-container">
+        <div class="calendar-header">
+            <button id="prev-month">&lt;</button>
+            <h2 id="current-month">December 2024</h2>
+            <button id="next-month">&gt;</button>
+        </div>
+        <div class="calendar" id="calendar"></div>
+    </div>
+    <div class="time-slots-container" id="time-slots-container">
+        <div class="time-period" id="morning-slots">
+            <h4>Morning</h4>
+        </div>
+        <div class="time-period" id="afternoon-slots">
+            <h4>Afternoon</h4>
+        </div>
+        <div class="time-period" id="evening-slots">
+            <h4>Evening</h4>
+        </div>
+    </div>
+    <form id="booking-form" style="display:none;" onsubmit="submitBooking(event)">
+        <h3>Book an Appointment</h3>
+        <input type="hidden" id="selected-date">
+        <input type="hidden" id="selected-time">
+        <input type="hidden" id="user-id" value="{{ user_id }}"> <!-- Added user_id -->
+        <label>First Name: <input type="text" id="first-name" required></label>
+        <label>Last Name: <input type="text" id="last-name" required></label>
+        <label>Email: <input type="email" id="email" required></label>
+        <label>Phone Number: <input type="tel" id="phone-number" required></label>
+        <button type="submit">Confirm Booking</button>
+    </form>    
+
+    <script>
+        const bookedSlots = {{ booked_slots | tojson | safe }};
+    </script>
+    <script src="{{ url_for('static', filename='js/calendar.js') }}"></script>
+</body>
+</html>
